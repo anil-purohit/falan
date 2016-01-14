@@ -1,0 +1,7 @@
+
+.idea/*
+tmp/*
+log/*
+db/*
+Gemfile.lock
+falan.iml
