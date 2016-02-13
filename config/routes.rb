@@ -2,6 +2,10 @@ require 'api_constraints'
 
 Rails.application.routes.draw do
 
+  namespace :admin do
+    resources :books
+  end
+
   root 'welcome#index'
 
   # APIs for interacting with falan system.
