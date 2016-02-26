@@ -1,4 +1,4 @@
-class Admin::BooksController < ApplicationController
+class Admin::BooksController < Admin::MainController
   before_action :set_admin_book, :only => [:show, :edit, :update, :destroy]
 
   # GET /admin/books

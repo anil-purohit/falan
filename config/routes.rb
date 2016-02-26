@@ -1,9 +1,10 @@
 require 'api_constraints'
 
 Rails.application.routes.draw do
-
   namespace :admin do
     resources :books
+    resources :user_books
+    get '/' => 'user_books#index'
   end
 
   root 'welcome#index'
@@ -12,6 +13,7 @@ Rails.application.routes.draw do
   namespace :api, :defaults => {:format => :json} do
     scope :module => :v1, :constraints => ApiConstraints.new(:version => 1, :default => true) do
       resources :users, :only => [:show, :create]
+      resources :user_books, :only => [:create]
     end
   end
 
