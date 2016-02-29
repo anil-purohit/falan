@@ -3,5 +3,6 @@ class User < ActiveRecord::Base
   validates :signup_id, :presence => true
   enum :status => [:active, :admin, :inactive]
   enum :signup_medium => [:facebook]
-  has_many :books
+  has_many :user_books
+  has_many :friends
 end
