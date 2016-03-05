@@ -1,9 +1,9 @@
 class Api::V1::SearchController < Api::MainController
 
   def search
-    create_response(400, "Bad Request") if params[:id].to_i <= 0
+    return create_response(400, "Bad Request") if params[:id].to_i <= 0
     user = User.where(:id => params[:id].to_i).first
-    create_response(400, "Bad Request") if (user.nil? || user.status == "inactive")
+    return create_response(400, "Bad Request") if (user.nil? || user.status == "inactive")
     friends = user.friends.to_a
     return create_response(200, {}) unless friends.present?
 

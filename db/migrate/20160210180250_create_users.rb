@@ -8,6 +8,7 @@ class CreateUsers < ActiveRecord::Migration
       t.integer :status, :default => 0
       t.integer :signup_medium, :default => 0
       t.string :signup_id
+      t.string :access_token
       t.timestamps :null => false
     end
   end

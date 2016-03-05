@@ -13,6 +13,13 @@ class Api::V1::UsersController < Api::MainController
   end
 
 
+  # POST request to create user.
+  # Request Payload with mandatory params
+  # {
+  #     "email_id" : "anilpurohit711@gmail.com",
+  #     "signup_id" : "123",
+  #     "access_token" : "12345"
+  # }
   def create
     user = User.where(:email_id => params[:email_id]).first
     user = User.new if user.nil?
