@@ -23,7 +23,7 @@ $(document).ready(function () {
         };
         $.ajax({
             type: "POST",
-            url: "notify",
+            url: "welcome/notify",
             data: formData,
             success: function (msg) {
                 document.getElementById("notifyResultLabel").innerHTML = msg["result"];
