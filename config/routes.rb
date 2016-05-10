@@ -14,7 +14,8 @@ Rails.application.routes.draw do
     scope :module => :v1, :constraints => ApiConstraints.new(:version => 1, :default => true) do
       resources :users, :only => [:show, :create]
       resources :user_books, :only => [:create]
-      get "search/:id" => "search#search"
+      get "search/:id" => "search#search_books_of_user"
+      get "home/search/:id" => "search#home_page_search"
     end
   end
 

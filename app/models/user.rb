@@ -6,4 +6,9 @@ class User < ActiveRecord::Base
   enum :signup_medium => [:facebook]
   has_many :user_books
   has_many :friends
+
+  def self.get_user_names(user_ids)
+    users = where(:id => user_id, :status => 1).all.index_by(&:id)
+    users.map { |id, user_details|  users[id] = "#{user_details.first_name} #{user_details.last_name}"}
+  end
 end

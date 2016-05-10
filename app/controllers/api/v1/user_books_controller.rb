@@ -29,6 +29,7 @@ class Api::V1::UserBooksController < Api::MainController
       user_book[:user_id] = user_book_params[:user_id]
       user_book[:lat] = user_book_params[:lat]
       user_book[:long] = user_book_params[:long]
+      user_book[:current_owner_id] = user_book_params[:user_id]
       user_book[:url] = convert_data_uri_to_upload(user_book_params[:user_id], image)[:image]
       user_books << user_book
     end
