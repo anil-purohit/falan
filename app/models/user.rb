@@ -6,9 +6,21 @@ class User < ActiveRecord::Base
   enum :signup_medium => [:facebook]
   has_many :user_books
   has_many :friends
+  after_save :update_facebook_friends
 
   def self.get_user_names(user_ids)
     users = where(:id => user_id, :status => 1).all.index_by(&:id)
-    users.map { |id, user_details|  users[id] = "#{user_details.first_name} #{user_details.last_name}"}
+    users.map { |id, user_details| users[id] = "#{user_details.first_name} #{user_details.last_name}" }
+  end
+
+  def update_facebook_friends
+    facebook_graph = Koala::Facebook::API.new(access_token)
+    facebook_friends = facebook_graph.get_connections(signup_id, "friends")
+    facebook_friends.map! { |friend| friend["id"] }
+    friend_users = User.where(:signup_id => facebook_friends).all
+    friend_users.each do |friend|
+      new_friend = Friend.new({:user_id => id, :signup_id => signup_id, :friend_user_id => friend.id})
+      new_friend.save
+    end
   end
 end
