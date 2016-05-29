@@ -24,7 +24,25 @@ class Api::V1::UsersController < Api::MainController
     user = User.where(:email_id => params[:email_id]).first
     user = User.new if user.nil?
     params[:user].each { |key, value| user[key] = value }
+    if params[:location].present?
+      location_info = Geokit::Geocoders::GoogleGeocoder.geocode params[:location].to_s
+      if location_info.present?
+        lat_long = location_info.ll
+        user[:lat] = lat_long.split(",")[0]
+        user[:long] = lat_long.split(",")[1]
+      else
+        add_default_location user
+      end
+    else
+      add_default_location user
+    end
     result = user.save! if user.valid?
     result ? create_response(200, user) : create_response(400, user.errors)
+  end
+
+  def add_default_location(user)
+    user[:location] = "Bangalore"
+    user[:lat] = 12.9716
+    user[:long] = 77.5946
   end
 end

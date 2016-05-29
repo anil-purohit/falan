@@ -36,7 +36,12 @@ class Admin::UserBooksController < Admin::MainController
     if book.nil?
       @user_book.errors.add(:book_id, "Invalid Book Id.")
     else
-      update_result = @user_book.update(:book_id => user_book[:book_id], :status => 1)
+      existing_user_book = UserBook.where(:user_id => user_book[:user_id], :book_id => book[:id])
+      update_status = 1
+      if existing_user_book.present?
+        update_status = 2
+      end
+      update_result = @user_book.update(:book_id => user_book[:book_id], :status => update_status)
     end
 
     respond_to do |format|
