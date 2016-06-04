@@ -31,10 +31,10 @@ class Api::V1::UsersController < Api::MainController
         user[:lat] = lat_long.split(",")[0]
         user[:long] = lat_long.split(",")[1]
       else
-        add_default_location user
+        add_location_info_to_user user, get_default_location
       end
     else
-      add_default_location user
+      add_location_info_to_user user, get_default_location
     end
     result = user.save! if user.valid?
     result ? create_response(200, user) : create_response(400, user.errors)
@@ -42,23 +42,44 @@ class Api::V1::UsersController < Api::MainController
 
   def update_user_location
     id = params[:id].to_i
-    return create_response(400, "Invalid User Id.") if id <=0 || params[:location].blank?
+    return create_response(400, "Invalid User Id.") if id <=0
+    is_location_present = params[:location].present?
+    is_location_present ||= (params[:lat].present? && params[:long].present?)
+    return create_response(400, "Invalid Location Data") unless is_location_present
     user = User.where(:id => id).first
-    location_info = Geokit::Geocoders::GoogleGeocoder.geocode params[:location].to_s
-    if location_info.present?
-      lat_long = location_info.ll
-      user[:lat] = lat_long.split(",")[0]
-      user[:long] = lat_long.split(",")[1]
+    location_info = {}
+    if params[:location].present?
+      lat_long_info = Geokit::Geocoders::GoogleGeocoder.geocode params[:location].to_s
+      if lat_long_info.present?
+        lat_long = lat_long_info.ll
+        location_info[:location] = params[:location]
+        location_info[:lat] = lat_long.split(",")[0]
+        location_info[:long] = lat_long.split(",")[1]
+      end
     else
-      add_default_location user
+      city_info = Geokit::Geocoders::GoogleGeocoder.do_reverse_geocode ("#{params[:lat]},#{params[:long]}")
+      location_info[:location] = city_info.city
+      location_info[:lat] = params[:lat]
+      location_info[:long] = params[:long]
     end
+    location_info = get_default_location if location_info.blank? || location_info[:location].blank?
+
+    add_location_info_to_user(user, location_info)
     result = user.save!
     result ? create_response(200, user) : create_response(400, user.errors)
   end
 
-  def add_default_location(user)
-    user[:location] = "Delhi"
-    user[:lat] = 28.6139
-    user[:long] = 77.2090
+  def add_location_info_to_user(user, location_info)
+    user[:location] = location_info[:location]
+    user[:lat] = location_info[:lat]
+    user[:long] = location_info[:long]
+  end
+
+  def get_default_location
+    location_info = {}
+    location_info[:location] = "Delhi"
+    location_info[:lat] = 28.6139
+    location_info[:long] = 77.2090
+    location_info
   end
 end

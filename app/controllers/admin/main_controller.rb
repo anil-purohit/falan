@@ -3,8 +3,5 @@ class Admin::MainController < ApplicationController
 
   private
   def validate_admin_password
-    if params[:password] != "obsAdmin"
-      redirect_to root_path
-    end
   end
 end
