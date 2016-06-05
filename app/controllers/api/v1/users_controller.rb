@@ -78,8 +78,8 @@ class Api::V1::UsersController < Api::MainController
   def get_default_location
     location_info = {}
     location_info[:location] = "Delhi"
-    location_info[:lat] = 28.6139
-    location_info[:long] = 77.2090
+    location_info[:lat] = 0.0
+    location_info[:long] = 0.0
     location_info
   end
 end
