@@ -28,14 +28,12 @@ class Api::V1::UsersController < Api::MainController
       location_info = Geokit::Geocoders::GoogleGeocoder.geocode params[:location].to_s
       if location_info.present?
         lat_long = location_info.ll
+        user[:location] = params[:location]
         user[:lat] = lat_long.split(",")[0]
         user[:long] = lat_long.split(",")[1]
-      else
-        add_location_info_to_user user, get_default_location
       end
-    else
-      add_location_info_to_user user, get_default_location
     end
+    add_location_info_to_user user, get_default_location if user[:location].blank?
     result = user.save! if user.valid?
     result ? create_response(200, user) : create_response(400, user.errors)
   end
