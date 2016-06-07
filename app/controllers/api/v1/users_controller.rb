@@ -63,7 +63,7 @@ class Api::V1::UsersController < Api::MainController
     location_info = get_default_location if location_info.blank? || location_info[:location].blank?
 
     add_location_info_to_user(user, location_info)
-    result = user.save!
+    result = user.save! if user.valid?
     result ? create_response(200, user) : create_response(400, user.errors)
   end
 

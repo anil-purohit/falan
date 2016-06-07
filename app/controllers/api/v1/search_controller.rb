@@ -31,6 +31,7 @@ class Api::V1::SearchController < Api::MainController
     return create_response(400, "Bad Request") if (user.nil? || user.status == "inactive")
 
     user_friend_ids = user.friends.collect(&:friend_user_id)
+    user_friend_ids.uniq!
     user_friends_info = User.where(:id => user_friend_ids).index_by(&:id)
     friend_books = []
     user_friends_info.each do |id, friend|

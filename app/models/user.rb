@@ -19,8 +19,9 @@ class User < ActiveRecord::Base
     facebook_friends.map! { |friend| friend["id"] }
     friend_users = User.where(:signup_id => facebook_friends).all
     friend_users.each do |friend|
-      new_friend = Friend.new({:user_id => id, :signup_id => signup_id, :friend_user_id => friend.id})
-      new_friend.save
+      Friend.find_or_initialize_by(:user_id => id, :signup_id => signup_id, :friend_user_id => friend.id) do |new_friend|
+        new_friend.save
+      end
     end
   end
 end
