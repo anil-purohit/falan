@@ -22,6 +22,13 @@ class Api::V1::UserBooksController < Api::MainController
     create_response(200, response)
   end
 
+  def delete
+    create_response(400, "Bad Request") if (params[:user_id] <=0 || params[:book_id] <=0)
+    user_book = UserBook.where(:user_id => params[:user_id], :book_id => params[:book_id]).first
+    user_book.destroy if user_book.present?
+    create_response(200, "success")
+  end
+
   def create_individual_user_book(user_book_params)
     user_books = []
     user_book_params[:images].each do |image|
