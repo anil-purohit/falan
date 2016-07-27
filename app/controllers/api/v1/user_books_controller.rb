@@ -25,8 +25,28 @@ class Api::V1::UserBooksController < Api::MainController
   def delete
     create_response(400, "Bad Request") if (params[:user_id] <=0 || params[:book_id] <=0)
     user_book = UserBook.where(:user_id => params[:user_id], :book_id => params[:book_id]).first
-    user_book.destroy if user_book.present?
-    create_response(200, "success")
+    if user_book.present? && user_book[:exchange_status] == 0
+      user_book.destroy
+      create_response(200, "success.")
+    else
+      create_response(400, "Book is not with user.")
+    end
+  end
+
+  def update_status
+    create_response(400, "Bad Request") if (params[:user_id] <=0 || params[:book_id] <=0)
+    user_book = UserBook.where(:user_id => params[:user_id], :book_id => params[:book_id]).first
+    if user_book.present?
+      user_book[:exchange_status] = params[:exchange_status]
+      user_book[:current_owner_id] = params[:new_user_id].to_i
+
+      return create_response(400, "Bad Request") if (user_book[:exchange_status] == 0 && user_book[:user_id] != user_book[:current_owner_id])
+
+      user_book.save
+      create_response(200, "success")
+    else
+      create_response(400, "Book is not with user.")
+    end
   end
 
   def create_individual_user_book(user_book_params)

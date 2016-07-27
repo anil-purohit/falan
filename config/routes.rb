@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       resources :users, :only => [:show, :create]
       resources :user_books, :only => [:create]
       post "/user_books/delete" => "user_books#delete"
+      post "/user_books/update-status" => "user_books#update_status"
       post "/user/update-location" => "users#update_user_location"
       get "search/:id" => "search#search_books_of_user"
       get "home/search/:id" => "search#home_page_search"
