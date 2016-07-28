@@ -22,5 +22,9 @@ module Falan
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+    ENV["ACCESS_KEY_ID"] = "AKIAJQHSQ3UZ7PD2C6SA"
+    ENV["SECRET_ACCESS_KEY"] = "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"
+    ENV["S3_BUCKET_NAME"] = "pickitnow.in"
+    ENV["AWS_REGION"] = "ap-southeast-1"
   end
 end

@@ -2,6 +2,5 @@
 .idea/*
 tmp/*
 log/*
-db/*
-Gemfile.lock
+db/schema.rb
 falan.iml

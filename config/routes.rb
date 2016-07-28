@@ -1,11 +1,51 @@
+require 'api_constraints'
+
 Rails.application.routes.draw do
-  get 'welcome/index'
+  namespace :admin do
+    resources :books
+    resources :user_books
+    get '/' => 'user_books#index'
+  end
 
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
-  # You can have the root of your site routed with "root"
   root 'welcome#index'
+
+  # APIs for interacting with falan system.
+  namespace :api, :defaults => {:format => :json} do
+    scope :module => :v1, :constraints => ApiConstraints.new(:version => 1, :default => true) do
+      resources :users, :only => [:show, :create]
+      resources :user_books, :only => [:create]
+      post "/user_books/delete" => "user_books#delete"
+      post "/user_books/update-status" => "user_books#update_status"
+      post "/user/update-location" => "users#update_user_location"
+      get "search/:id" => "search#search_books_of_user"
+      get "home/search/:id" => "search#home_page_search"
+    end
+  end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
