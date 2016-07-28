@@ -23,7 +23,7 @@ class Api::V1::UserBooksController < Api::MainController
   end
 
   def delete
-    create_response(400, "Bad Request") if (params[:user_id] <=0 || params[:book_id] <=0)
+    return create_response(400, "Bad Request") if (params[:user_id] <=0 || params[:book_id] <=0)
     user_book = UserBook.where(:user_id => params[:user_id], :book_id => params[:book_id]).first
     if user_book.present? && user_book[:exchange_status] == 0
       user_book.destroy
