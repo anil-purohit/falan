@@ -61,6 +61,7 @@ class Api::V1::RequestsController < Api::MainController
       user_book = user_books_map[user_book_id]
       book_id = user_book[:book_id]
       request_info[:request_id] = book_request[:id]
+      request_info[:status] = book_request[:status]
       request_info[:book_id] = book_id
       request_info[:requester_id] = requester
       request_info[:book_name] = books_info[book_id].title
