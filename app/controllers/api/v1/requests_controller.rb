@@ -25,6 +25,7 @@ class Api::V1::RequestsController < Api::MainController
     return create_response(400, "Book is not with owner") if user_book[:current_owner_id] != user_book[:user_id]
 
     book_request.status = 2
+    user_book.exchange_status = 1
     user_book.current_owner_id = book_request[:requester_id]
     book_request.save
     user_book.save
